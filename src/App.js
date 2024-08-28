@@ -1,24 +1,41 @@
-import logo from './logo.svg';
+import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import React from "react"
+import Contact from './components/Contact/Contact';
+import Home from './components/Home/Home';
 import './App.css';
+import NotFound from './components/NotFound/NotFound';
+import Navbar from './components/Navbar/Navbar';
+import Personal from './components/Personal';
+import Professional from './components/Professional';
+import Login from './components/Login';
+import { AuthProvider } from './components/auth';
+
+
+const LazyAbout=React.lazy(()=>import('./components/About/About'))
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+    
+      <BrowserRouter>
+      <Navbar/>
+      <Home/>
+        <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/login" element={<Login/>}/>
+          <Route path="/about" element={<React.Suspense><LazyAbout/></React.Suspense>}/>
+          <Route path="/contact" element={<Contact/>}>
+               <Route path="personal" element={<Personal/>}/>
+               <Route path="professional" element={<Professional/>}/>
+          </Route>
+          <Route element={NotFound}/>
+         
+        </Routes>
+        
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
